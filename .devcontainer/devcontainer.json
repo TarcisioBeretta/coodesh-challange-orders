@@ -1,0 +1,30 @@
+{
+  "name": "Order System - FIX Protocol",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "workspace",
+  "workspaceFolder": "/workspace",
+
+  "features": {
+    "ghcr.io/devcontainers/features/dotnet:2": {
+      "version": "8.0"
+    },
+    "ghcr.io/devcontainers/features/node:2": {
+      "version": "lts"
+    },
+    "ghcr.io/devcontainers/features/common-utils:2": {}
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csdevkit",
+        "ms-dotnettools.csharp",
+        "angular.ng-template"
+      ]
+    }
+  },
+
+  "forwardPorts": [5000, 5001, 4200, 9878, 5432],
+
+  "postCreateCommand": "dotnet --version && node --version"
+}
