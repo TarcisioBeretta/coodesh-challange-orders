@@ -14,12 +14,14 @@ public class ProcessOrderCommandHandlerTests
     private readonly ProcessOrderCommandHandler _handler;
     private readonly Mock<IOrderRepository> _orderRepository;
     private readonly Mock<IExposureRepository> _exposureRepository;
+    private readonly Mock<IUnitOfWork> _unitOfWork;
 
     public ProcessOrderCommandHandlerTests()
     {
         _orderRepository = new Mock<IOrderRepository>();
         _exposureRepository = new Mock<IExposureRepository>();
-        _handler = new ProcessOrderCommandHandler(_orderRepository.Object, _exposureRepository.Object);
+        _unitOfWork = new Mock<IUnitOfWork>();
+        _handler = new ProcessOrderCommandHandler(_orderRepository.Object, _exposureRepository.Object, _unitOfWork.Object);
     }
 
     [Fact]
@@ -39,6 +41,7 @@ public class ProcessOrderCommandHandlerTests
         VerifyOrderAdded(ExecType.New);
         VerifyExposureAdded(symbol);
         VerifyExposureUpdated(Times.Never());
+        VerifyCommit();
     }
 
     [Fact]
@@ -60,6 +63,7 @@ public class ProcessOrderCommandHandlerTests
         VerifyOrderAdded(ExecType.New);
         VerifyExposureAdded(Times.Never());
         VerifyExposureUpdated(symbol, Times.Once());
+        VerifyCommit();
     }
 
     [Fact]
@@ -81,6 +85,7 @@ public class ProcessOrderCommandHandlerTests
         VerifyOrderAdded(ExecType.Rejected);
         VerifyExposureAdded(Times.Never());
         VerifyExposureUpdated(Times.Never());
+        VerifyCommit();
     }
 
     private static void AssertResult(
@@ -135,5 +140,12 @@ public class ProcessOrderCommandHandlerTests
         _exposureRepository.Verify(
             x => x.UpdateAsync(It.IsAny<Exposure>(), It.IsAny<CancellationToken>()),
             times);
+    }
+
+    private void VerifyCommit(Times? times = null)
+    {
+        _unitOfWork.Verify(
+            x => x.CommitAsync(It.IsAny<CancellationToken>()),
+            times ?? Times.Once());
     }
 }

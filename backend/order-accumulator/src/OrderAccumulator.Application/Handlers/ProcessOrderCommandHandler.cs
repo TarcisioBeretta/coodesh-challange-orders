@@ -10,7 +10,8 @@ namespace OrderAccumulator.Application.Handlers;
 
 public class ProcessOrderCommandHandler(
     IOrderRepository _orderRepository,
-    IExposureRepository _exposureRepository) : IRequestHandler<ProcessOrderCommand, ProcessOrderResultDto>
+    IExposureRepository _exposureRepository,
+    IUnitOfWork _unitOfWork) : IRequestHandler<ProcessOrderCommand, ProcessOrderResultDto>
 {
     public async Task<ProcessOrderResultDto> Handle(ProcessOrderCommand request, CancellationToken cancellationToken)
     {
@@ -23,6 +24,7 @@ public class ProcessOrderCommandHandler(
             
             await AddOrderAsync(order, cancellationToken);
             await AddOrUpdateExposureAsync(exposure, cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
             
             return CreateSuccessResult(request, exposure);
         }
@@ -31,6 +33,7 @@ public class ProcessOrderCommandHandler(
             var rejectedOrder = CreateRejectedOrder(request);
 
             await _orderRepository.AddAsync(rejectedOrder, cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
 
             return CreateRejectedResult(request, exposure, ex.Message);
         }
