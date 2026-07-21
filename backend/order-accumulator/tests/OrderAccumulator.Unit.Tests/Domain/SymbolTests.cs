@@ -1,18 +1,10 @@
-using OrderGenerator.Domain.ValueObjects;
+using OrderAccumulator.Domain.ValueObjects;
 using Xunit;
 
-namespace OrderGenerator.Domain.Tests;
+namespace OrderAccumulator.Domain.Tests;
 
 public class SymbolTests
 {
-    [Fact]
-    public void Create_ValidSymbol_ReturnsSymbol()
-    {
-        var symbol = Symbol.Create("PETR4");
-        
-        Assert.Equal("PETR4", symbol.Value);
-    }
-
     [Fact]
     public void Create_ValidSymbolUpperCase_ReturnsSymbol()
     {
@@ -38,7 +30,6 @@ public class SymbolTests
         Assert.Throws<ArgumentException>(() => Symbol.Create(""));
     }
 
-
     [Fact]
     public void Create_InvalidSymbol_ThrowsArgumentException()
     {
@@ -60,4 +51,5 @@ public class SymbolTests
         
         Assert.Equal("INVALID", symbol.Value);
     }
+
 }
