@@ -16,4 +16,15 @@
     <ProjectReference Include="..\OrderGenerator.Infrastructure\OrderGenerator.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\OrderGenerator.Infrastructure\Fix\initiator.cfg">
+      <Link>Fix\initiator.cfg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+
+    <None Include="..\OrderGenerator.Infrastructure\Fix\FIX44.xml">
+      <Link>Fix\FIX44.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
