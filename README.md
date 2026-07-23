@@ -1,26 +1,116 @@
-# Project Empty Template
+# Order System - FIX Protocol
 
-Este é um repositório de exemplo para você começar a desenvolver a questão, leia com atenção os requisitos do enunciado da questão na plataforma e seguia as boas práticas sobre como utilizar este repositório.
+Aplicação desenvolvida para o challenge da Coodesh que implementa a comunicação entre dois serviços utilizando o protocolo FIX 4.4 para processamento de ordens financeiras.
 
+## Tecnologias
 
-## Readme do Repositório
+### Backend
 
-- Deve conter o título do projeto
-- Uma descrição sobre o projeto em frase
-- Deve conter uma lista com linguagem, framework e/ou tecnologias usadas
-- Como instalar e usar o projeto (instruções)
-- Não esqueça o [.gitignore](https://www.toptal.com/developers/gitignore)
-- Se está usando github pessoal, referencie que é um challenge by coodesh:  
+* .NET 8
+* ASP.NET Core Web API
+* C#
+* QuickFIX/n (FIX 4.4)
+* Entity Framework Core (InMemory)
+* MediatR
+* FluentValidation
 
->  This is a challenge by [Coodesh](https://coodesh.com/)
+### Frontend
 
-## Finalização e Instruções para a Apresentação
+* Angular 22
+* Angular Material
+* TypeScript
 
-1. Adicione o link do repositório com a sua solução na questão na plataforma
-2. Verifique se o Readme está bom e faça o commit final em seu repositório;
-3. Envie e aguarde as instruções para seguir. Caso o teste tenha apresentação de vídeo, dentro da tela de entrega será possível gravar após adicionar o link do repositório. Sucesso e boa sorte. =)
+### Infraestrutura
 
+* Docker
+* Dev Containers
 
-## Suporte
+## Arquitetura
 
-Para tirar dúvidas sobre o processo envie uma mensagem diretamente a um especialista no chat da plataforma. 
+O projeto é composto por três aplicações:
+
+* **OrderGenerator**: API responsável por receber requisições HTTP, criar mensagens `NewOrderSingle` e enviá-las ao OrderAccumulator através do protocolo FIX.
+* **OrderAccumulator**: Serviço responsável por receber mensagens FIX, calcular a exposição financeira por símbolo e responder com um `ExecutionReport`.
+* **Frontend Angular**: Interface para envio de ordens e visualização do resultado do processamento.
+
+Atualmente a persistência utiliza o provedor **Entity Framework Core InMemory** para simplificar a execução do projeto.
+
+## Estrutura do Projeto
+
+```text
+src/
+├── OrderGenerator.Api
+├── OrderGenerator.Application
+├── OrderGenerator.Domain
+├── OrderGenerator.Infrastructure
+├── OrderAccumulator.Api
+├── OrderAccumulator.Application
+├── OrderAccumulator.Domain
+└── OrderAccumulator.Infrastructure
+
+frontend/
+└── order-frontend
+```
+
+## Funcionalidades
+
+* Comunicação entre aplicações utilizando FIX 4.4
+* Envio de mensagens `NewOrderSingle`
+* Recebimento de `ExecutionReport`
+* Cálculo de exposição financeira por símbolo
+* Validação do limite de exposição de R$ 100.000.000
+* Aceitação ou rejeição de ordens
+* Interface web para envio de ordens
+
+## Como executar
+
+### Pré-requisitos
+
+* Docker
+* Visual Studio Code
+* Extensão Dev Containers
+* .NET SDK 8
+* Node.js 24+
+* Angular CLI
+
+### 1. Abrir o projeto no Dev Container
+
+Abra o projeto utilizando a extensão **Dev Containers** do VS Code.
+
+### 2. Executar o OrderAccumulator
+
+```bash
+cd src/OrderAccumulator.Api
+dotnet run
+```
+
+### 3. Executar o OrderGenerator
+
+```bash
+cd src/OrderGenerator.Api
+dotnet run
+```
+
+A API estará disponível em:
+
+```
+http://localhost:5000
+```
+
+### 4. Executar o Frontend
+
+```bash
+cd frontend/order-frontend
+npm install
+ng serve
+```
+
+O frontend ficará disponível em:
+
+```
+http://localhost:4200
+```
+
+---
+
+> This is a challenge by [Coodesh](https://coodesh.com/)
