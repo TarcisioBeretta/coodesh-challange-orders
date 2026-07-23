@@ -19,11 +19,17 @@ namespace OrderAccumulator.Infrastructure.Data.Repositories
             return exposureEntity?.ToDomain();
         }
 
-        public Task UpdateAsync(Exposure exposure, CancellationToken cancellationToken)
+        public async Task UpdateAsync(Exposure exposure, CancellationToken cancellationToken)
         {
-            var exposureEntity = ExposureEntity.FromDomain(exposure);
-            context.Exposures.Update(exposureEntity);
-            return Task.CompletedTask;
+            var exposureEntity = await context.Exposures.FindAsync([exposure.Symbol.Value], cancellationToken);
+            var updatedEntity = ExposureEntity.FromDomain(exposure);
+
+            if (exposureEntity is null)
+            {
+                throw new InvalidOperationException("Exposure not found.");
+            }
+
+            context.Entry(exposureEntity).CurrentValues.SetValues(updatedEntity);
         }
     }
 }
