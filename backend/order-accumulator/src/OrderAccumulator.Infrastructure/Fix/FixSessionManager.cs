@@ -4,7 +4,7 @@ using QuickFix.Store;
 
 namespace OrderAccumulator.Infrastructure.Fix;
 
-public class FixSessionManager
+public class FixSessionManager(FixApplication application)
 {
     private ThreadedSocketAcceptor? _acceptor;
 
@@ -31,8 +31,6 @@ public class FixSessionManager
                 "DataDictionary",
                 fix44Path);
         }
-
-        var application = new FixApplication();
 
         var storeFactory = new FileStoreFactory(settings);
 

@@ -1,8 +1,11 @@
+using OrderAccumulator.Application;
 using OrderAccumulator.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddInfrastructure();
+builder.Services
+    .AddApplication()
+    .AddInfrastructure();
 
 var app = builder.Build();
 

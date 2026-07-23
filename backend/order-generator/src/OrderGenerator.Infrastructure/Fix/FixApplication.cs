@@ -1,8 +1,9 @@
 using QuickFix;
+using QuickFix.Fields;
 
 namespace OrderGenerator.Infrastructure.Fix;
 
-public class FixApplication : IApplication
+public class FixApplication(PendingExecutionReportStore pendingStore) : IApplication
 {
     public void OnCreate(SessionID sessionID)
     {
@@ -29,7 +30,20 @@ public class FixApplication : IApplication
 
     public void FromApp(Message message, SessionID sessionID)
     {
-        Console.WriteLine($"Received FIX message: {message}");
+        var msgType = new MsgType();
+
+        message.Header.GetField(msgType);
+
+        if (msgType.Value == MsgType.EXECUTION_REPORT)
+        {
+            var executionReport = (QuickFix.FIX44.ExecutionReport)message;
+
+            var clOrdId = executionReport.GetString(Tags.ClOrdID);
+
+            var orderId = Guid.Parse(clOrdId);
+
+            pendingStore.Complete(orderId, executionReport);
+        }
     }
 
     public void ToApp(Message message, SessionID sessionID)

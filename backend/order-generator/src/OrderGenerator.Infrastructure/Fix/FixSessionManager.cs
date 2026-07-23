@@ -5,7 +5,7 @@ using QuickFix.Transport;
 
 namespace OrderGenerator.Infrastructure.Fix;
 
-public class FixSessionManager
+public class FixSessionManager(FixApplication application)
 {
     private SocketInitiator? _initiator;
 
@@ -31,8 +31,6 @@ public class FixSessionManager
                 "DataDictionary",
                 fix44Path);
         }
-
-        var application = new FixApplication();
 
         var storeFactory = new FileStoreFactory(settings);
 
