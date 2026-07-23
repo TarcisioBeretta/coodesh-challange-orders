@@ -1,0 +1,27 @@
+.container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 16px;
+}
+
+mat-card {
+  padding: 16px;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+button {
+  width: 100%;
+}
+
+.response-card {
+  margin-top: 24px;
+}
+
+.error {
+  color: #d32f2f;
+  font-weight: 600;
+}
